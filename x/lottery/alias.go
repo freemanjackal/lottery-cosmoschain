@@ -1,8 +1,8 @@
 package goldcdp
 
 import (
-	"github.com/bandprotocol/goldcdp/x/goldcdp/keeper"
-	"github.com/bandprotocol/goldcdp/x/goldcdp/types"
+	"github.com/freemanjackal/lottery/x/lottery/keeper"
+	"github.com/freemanjackal/lottery/x/lottery/types"
 )
 
 const (
@@ -19,6 +19,6 @@ var (
 
 type (
 	Keeper              = keeper.Keeper
-	MsgBuyGold          = types.MsgBuyGold
+	MsgPlayLottery          = types.MsgPlayLottery
 	MsgSetSourceChannel = types.MsgSetSourceChannel
 )

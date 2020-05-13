@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/bandprotocol/goldcdp/x/goldcdp/types"
+	"github.com/freemanjackal/lottery/x/lottery/types"
 )
 
 type Keeper struct {
@@ -29,9 +29,18 @@ func NewKeeper(cdc *codec.Codec, key sdk.StoreKey, bankKeeper types.BankKeeper,
 }
 
 // GetOrderCount returns the current number of all orders ever exist.
-func (k Keeper) GetOrderCount(ctx sdk.Context) uint64 {
+func (k Keeper) GetBetCount(ctx sdk.Context) uint64 {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.OrdersCountStoreKey)
+	bz := store.Get(types.BetsCountStoreKey)
+	if bz == nil {
+		return 0
+	}
+	return binary.BigEndian.Uint64(bz)
+}
+// GetOrderCount returns the current number of all orders ever exist.
+func (k Keeper) GetLotteryCount(ctx sdk.Context) uint64 {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.LotteryCountStoreKey)
 	if bz == nil {
 		return 0
 	}

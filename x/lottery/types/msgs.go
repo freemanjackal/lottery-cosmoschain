@@ -52,46 +52,53 @@ func (msg MsgSetSourceChannel) GetSignBytes() []byte {
 }
 
 // MsgBuyGold is a message for creating order to buy gold
-type MsgBuyGold struct {
-	Buyer  sdk.AccAddress `json:"buyer"`
+type MsgPlayLottery struct {
+	Player  sdk.AccAddress `json:"player"`
 	Amount sdk.Coins      `json:"amount"`
+	Number uint8          `json:"number"`
 }
 
 // NewMsgBuyGold creates a new MsgBuyGold instance.
-func NewMsgBuyGold(
-	buyer sdk.AccAddress,
+func NewMsgPlayLottery(
+	player sdk.AccAddress,
 	amount sdk.Coins,
-) MsgBuyGold {
-	return MsgBuyGold{
-		Buyer:  buyer,
+	number uint8,
+) MsgPlayLottery {
+	return MsgPlayLottery{
+		Player:  player,
 		Amount: amount,
+		Number: number,
+
 	}
 }
 
-// Route implements the sdk.Msg interface for MsgBuyGold.
-func (msg MsgBuyGold) Route() string { return RouterKey }
+// Route implements the sdk.Msg interface for MsgPlayLottery.
+func (msg MsgPlayLottery) Route() string { return RouterKey }
 
-// Type implements the sdk.Msg interface for MsgBuyGold.
-func (msg MsgBuyGold) Type() string { return "buy_gold" }
+// Type implements the sdk.Msg interface for MsgPlayLottery.
+func (msg MsgPlayLottery) Type() string { return "play_lottery" }
 
 // ValidateBasic implements the sdk.Msg interface for MsgBuyGold.
-func (msg MsgBuyGold) ValidateBasic() error {
-	if msg.Buyer.Empty() {
-		return sdkerrors.Wrapf(ErrInvalidBasicMsg, "MsgBuyGold: Sender address must not be empty.")
+func (msg MsgPlayLottery) ValidateBasic() error {
+	if msg.Player.Empty() {
+		return sdkerrors.Wrapf(ErrInvalidBasicMsg, "MsgPlayLottery: Sender address must not be empty.")
 	}
 	if msg.Amount.Empty() {
-		return sdkerrors.Wrapf(ErrInvalidBasicMsg, "MsgBuyGold: Amount must not be empty.")
+		return sdkerrors.Wrapf(ErrInvalidBasicMsg, "MsgPlayLottery: Amount must not be empty.")
+	}
+	if msg.Number.Empty() {
+		return sdkerrors.Wrapf(ErrInvalidBasicMsg, "MsgPlayLottery: Number must not be empty.")
 	}
 	return nil
 }
 
 // GetSigners implements the sdk.Msg interface for MsgBuyGold.
-func (msg MsgBuyGold) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{msg.Buyer}
+func (msg MsgPlayLottery) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{msg.Player}
 }
 
 // GetSignBytes implements the sdk.Msg interface for MsgBuyGold.
-func (msg MsgBuyGold) GetSignBytes() []byte {
+func (msg MsgPlayLottery) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }

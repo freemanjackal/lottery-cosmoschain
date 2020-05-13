@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/bandprotocol/goldcdp/x/goldcdp/client/cli"
+	"github.com/freemanjackal/lottery/x/lottery/client/cli"
 )
 
 // AppModule Basics object

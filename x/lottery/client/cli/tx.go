@@ -15,36 +15,36 @@ import (
 	authclient "github.com/cosmos/cosmos-sdk/x/auth/client"
 	"github.com/spf13/cobra"
 
-	"github.com/bandprotocol/goldcdp/x/goldcdp/types"
+	"github.com/freemanjackal/lottery/x/lottery/types"
 )
 
 // GetTxCmd returns the transaction commands for this module
 func GetTxCmd(storeKey string, cdc *codec.Codec) *cobra.Command {
-	goldcdpCmd := &cobra.Command{
+	lotteryCmd := &cobra.Command{
 		Use:                        types.ModuleName,
-		Short:                      "goldcdp transaction subcommands",
+		Short:                      "lottery transaction subcommands",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
 	}
-	goldcdpCmd.AddCommand(flags.PostCommands(
+	lotteryCmd.AddCommand(flags.PostCommands(
 		GetCmdRequest(cdc),
 		GetCmdSetChannel(cdc),
 	)...)
 
-	return goldcdpCmd
+	return lotteryCmd
 }
 
 // GetCmdRequest implements the request command handler.
 func GetCmdRequest(cdc *codec.Codec) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "buy [amount]",
-		Short: "Make a new order to buy gold",
+		Use:   "bet [number]",
+		Short: "Make a new bet on a number",
 		Args:  cobra.ExactArgs(1),
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Make a new order to buy gold.
+			fmt.Sprintf(`Make a new lottery bet.
 Example:
-$ %s tx goldcdp buy 1000000dfsbsdfdf/transfer/uatom
+$ %s tx bet on number 1000000dfsbsdfdf/transfer/uatom
 `,
 				version.ClientName,
 			),
@@ -55,12 +55,14 @@ $ %s tx goldcdp buy 1000000dfsbsdfdf/transfer/uatom
 			txBldr := auth.NewTxBuilderFromCLI(inBuf).WithTxEncoder(authclient.GetTxEncoder(cdc))
 
 			amount, err := sdk.ParseCoins(args[0])
+			number := 26
 			if err != nil {
 				return err
 			}
-			msg := types.NewMsgBuyGold(
+			msg := types.NewMsgPlayLottery(
 				cliCtx.GetFromAddress(),
 				amount,
+				number
 			)
 
 			err = msg.ValidateBasic()
@@ -84,7 +86,7 @@ func GetCmdSetChannel(cdc *codec.Codec) *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Register a verified channel.
 Example:
-$ %s tx goldcdp set-cahnnel bandchain goldcdp dbdfgsdfsd
+$ %s tx lottery set-cahnnel bandchain lottery dbdfgsdfsd
 `,
 				version.ClientName,
 			),

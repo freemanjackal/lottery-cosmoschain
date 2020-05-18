@@ -1,20 +1,19 @@
 ## Instruction
 
-1. `Make install` to get `bcd` and `bccli`
-2. Initialized chain example can find at `start.sh`
-3. Run single validator by `bcd start --rpc.laddr=tcp://0.0.0.0:26657 --pruning=nothing`
+1. `Make install` to get `lotd` and `lotcli`
+2. Run single validator by `lotd start --rpc.laddr=tcp://0.0.0.0:26657 --pruning=nothing`
 
 ## Setup relayer
 
-Look how to setup at relayer.sh
+setup a relayer
 
-## How to get gold
+## 
 
-0. Set up channel in gold chain by bccli
+0. Set up channel in lottery chain by lotcli
 
 ```
-bccli tx goldcdp set-channel bandchain goldcdp <channel_id_of_goldcdp_goldchin> --from validator --keyring-backend test
-bccli tx goldcdp set-channel band-cosmoshub transfer <channel_id_of_transfer_goldchin> --from validator --keyring-backend test
+lotcli tx lottery set-channel bandchain lottery <channel_id_of_lottery> --from validator --keyring-backend test
+
 ```
 
 0.5 Get atom from faucet
@@ -37,5 +36,4 @@ curl --location --request POST 'http://gaia-ibc-hackathon.node.bandchain.org:800
 2. Send buy transaction
 
 ```
-bccli tx goldcdp buy <amount_same_unit_as_transfer> --from <account_in_gold_chain> --keyring-backend test
-```
+lotcli tx lottery create 

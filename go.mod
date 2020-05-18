@@ -1,4 +1,4 @@
-module github.com/bandprotocol/goldcdp
+module github.com/freemanjackal/lottery-cosmoschain
 
 go 1.13
 

@@ -8,41 +8,43 @@ type LotteryStatus uint8
 
 const (
 	
-	Open LotteryStatus
+	Open LotteryStatus = iota
 	Closed
 )
 
-var StandardPrice = sdk.Coins{sdk.NewInt64Coin("lotteryToken", 1)}
-var MaxNUmber = uint8(1000)
+var StandardPrice = sdk.Coins{sdk.NewInt64Coin("stake", 1)}
+var MaxNUmber = uint64(1000)
 
 type Lottery struct {
 	AccumulatedAmount sdk.Coins      `json:"accumulatedAmount"`
 	Price   sdk.Coins       `json:"price"`
 	Status LotteryStatus    `json:"status"`
-	WinningNumber uint8     `json:"winningNumber"`
-	MaxNUmber uint8 		`json:"maxNumber"`
+	WinningNumber uint64     `json:"winningNumber"`
+	MaxNUmber uint64 		`json:"maxNumber"`
+	Id uint64  				`json:"id"`
 }
 
-func NewLottery(amount sdk.Coins) Lottery {
+func NewLottery(Open LotteryStatus, id uint64, amount sdk.Coins) Lottery {
 	return Lottery{
 		Status: Open,
 		Price: StandardPrice,
 		MaxNUmber: MaxNUmber,
-		AccumulatedAmount: amount
+		AccumulatedAmount: amount,
+		Id: id,
 	}
 }
 
 
 type Bet struct {
 	Player  sdk.AccAddress `json:"player"`
-	LotteryNumber uint8     `json:"lotteryNumber"`
+	LotteryNumber uint64     `json:"lotteryNumber"`
 	Lottery Lottery 		`json:"lotteryId"`
 }
 
-func NewBet(player sdk.AccAddress, number uint8, lottery Lottery) Bet {
+func NewBet(player sdk.AccAddress, number uint64, lottery Lottery) Bet {
 	return Bet{
 		Player: player,
 		LotteryNumber: number,
-		Lottery: lottery
+		Lottery: lottery,
 	}
 }

@@ -19,7 +19,9 @@ var (
 	GlobalStoreKeyPrefix = []byte{0x00}
 
 	// OrdersCountStoreKey is a key that help getting to current Lottery count state variable
-	LotteryCountStoreKey = append(GlobalStoreKeyPrefix, []byte("OrdersCount")...)
+	LotteryCountStoreKey = append(GlobalStoreKeyPrefix, []byte("LotteryCount")...)
+
+	BetsCountStoreKey = append(GlobalStoreKeyPrefix, []byte("BetsCount")...)
 
 	// ChannelStoreKeyPrefix is a prefix for storing channel
 	ChannelStoreKeyPrefix = []byte{0x01}
@@ -44,7 +46,7 @@ func LotteryStoreKey(LotteryID uint64) []byte {
 }
 
 // BetStoreKey is a function to generate key for each Bet in store
-func BetStoreKey(BetID uint64) []byte {
+func BetStoreKey(BetID uint64, LotteryId uint64) []byte {
 	return append(BetStoreKeyPrefix, uint64ToBytes(BetID)...)
 }
 

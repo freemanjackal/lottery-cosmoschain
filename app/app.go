@@ -36,17 +36,17 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 
-	"github.com/bandprotocol/goldcdp/x/goldcdp"
+	"github.com/freemanjackal/lottery-cosmoschain/x/lottery"
 )
 
-const appName = "BandConsumerApp"
+const appName = "LotteryApp"
 
 var (
 	// DefaultCLIHome default home directories for bccli
-	DefaultCLIHome = os.ExpandEnv("$HOME/.bccli")
+	DefaultCLIHome = os.ExpandEnv("$HOME/.lotcli")
 
 	// DefaultNodeHome default home directories for bcd
-	DefaultNodeHome = os.ExpandEnv("$HOME/.bcd")
+	DefaultNodeHome = os.ExpandEnv("$HOME/.lotd")
 
 	// ModuleBasics The module BasicManager is in charge of setting up basic,
 	// non-dependant module elements, such as codec registration
@@ -68,7 +68,7 @@ var (
 		evidence.AppModuleBasic{},
 		ibc.AppModuleBasic{},
 		transfer.AppModuleBasic{},
-		goldcdp.AppModuleBasic{},
+		lottery.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -84,10 +84,10 @@ var (
 )
 
 // Verify app interface at compile time
-var _ simapp.App = (*BandConsumerApp)(nil)
+var _ simapp.App = (*LotteryApp)(nil)
 
 // BandConsumerApp extended ABCI application
-type BandConsumerApp struct {
+type LotteryApp struct {
 	*bam.BaseApp
 	cdc *codec.Codec
 
@@ -115,7 +115,7 @@ type BandConsumerApp struct {
 	evidenceKeeper evidence.Keeper
 	ibcKeeper      ibc.Keeper
 	transferKeeper transfer.Keeper
-	goldcdpKeeper  goldcdp.Keeper
+	lotteryKeeper lottery.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -125,11 +125,11 @@ type BandConsumerApp struct {
 }
 
 // NewBandConsumerApp returns a reference to an initialized BandConsumerApp.
-func NewBandConsumerApp(
+func NewLotteryApp(
 	logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest bool,
 	invCheckPeriod uint, skipUpgradeHeights map[int64]bool, home string,
 	baseAppOptions ...func(*bam.BaseApp),
-) *BandConsumerApp {
+) *LotteryApp {
 
 	// TODO: Remove cdc in favor of appCodec once all modules are migrated.
 	cdc := codecstd.MakeCodec(ModuleBasics)
@@ -142,11 +142,11 @@ func NewBandConsumerApp(
 		bam.MainStoreKey, auth.StoreKey, bank.StoreKey, staking.StoreKey,
 		supply.StoreKey, mint.StoreKey, distr.StoreKey, slashing.StoreKey,
 		gov.StoreKey, params.StoreKey, ibc.StoreKey, transfer.StoreKey,
-		evidence.StoreKey, upgrade.StoreKey, goldcdp.StoreKey,
+		evidence.StoreKey, upgrade.StoreKey, lottery.StoreKey,
 	)
 	tKeys := sdk.NewTransientStoreKeys(staking.TStoreKey, params.TStoreKey)
 
-	app := &BandConsumerApp{
+	app := &LotteryApp{
 		BaseApp:        bApp,
 		cdc:            cdc,
 		invCheckPeriod: invCheckPeriod,
@@ -228,8 +228,8 @@ func NewBandConsumerApp(
 	app.transferKeeper = transfer.NewKeeper(app.cdc, keys[transfer.StoreKey], transferCapKey,
 		app.ibcKeeper.ChannelKeeper, app.bankKeeper, app.supplyKeeper)
 
-	app.goldcdpKeeper = goldcdp.NewKeeper(
-		cdc, keys[goldcdp.StoreKey], app.bankKeeper, app.ibcKeeper.ChannelKeeper,
+	app.lotteryKeeper = lottery.NewKeeper(
+		cdc, keys[lottery.StoreKey], app.bankKeeper, app.ibcKeeper.ChannelKeeper,
 	)
 
 	// register the staking hooks
@@ -255,7 +255,7 @@ func NewBandConsumerApp(
 		evidence.NewAppModule(app.evidenceKeeper),
 		ibc.NewAppModule(app.ibcKeeper),
 		transfer.NewAppModule(app.transferKeeper),
-		goldcdp.NewAppModule(app.goldcdpKeeper),
+		lottery.NewAppModule(app.lotteryKeeper),
 	)
 	// During begin block slashing happens after distr.BeginBlocker so that
 	// there is nothing left over in the validator fee pool, so as to keep the
@@ -313,20 +313,20 @@ func NewBandConsumerApp(
 }
 
 // Name returns the name of the App
-func (app *BandConsumerApp) Name() string { return app.BaseApp.Name() }
+func (app *LotteryApp) Name() string { return app.BaseApp.Name() }
 
 // BeginBlocker application updates every begin block
-func (app *BandConsumerApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+func (app *LotteryApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	return app.mm.BeginBlock(ctx, req)
 }
 
 // EndBlocker application updates every end block
-func (app *BandConsumerApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
+func (app *LotteryApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.mm.EndBlock(ctx, req)
 }
 
 // InitChainer application update at chain initialization
-func (app *BandConsumerApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *LotteryApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
 	var genesisState simapp.GenesisState
 	app.cdc.MustUnmarshalJSON(req.AppStateBytes, &genesisState)
 
@@ -341,12 +341,12 @@ func (app *BandConsumerApp) InitChainer(ctx sdk.Context, req abci.RequestInitCha
 }
 
 // LoadHeight loads a particular height
-func (app *BandConsumerApp) LoadHeight(height int64) error {
+func (app *LotteryApp) LoadHeight(height int64) error {
 	return app.LoadVersion(height, app.keys[bam.MainStoreKey])
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *BandConsumerApp) ModuleAccountAddrs() map[string]bool {
+func (app *LotteryApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	for acc := range maccPerms {
 		modAccAddrs[supply.NewModuleAddress(acc).String()] = true
@@ -356,12 +356,12 @@ func (app *BandConsumerApp) ModuleAccountAddrs() map[string]bool {
 }
 
 // Codec returns the application's sealed codec.
-func (app *BandConsumerApp) Codec() *codec.Codec {
+func (app *LotteryApp) Codec() *codec.Codec {
 	return app.cdc
 }
 
 // SimulationManager implements the SimulationApp interface
-func (app *BandConsumerApp) SimulationManager() *module.SimulationManager {
+func (app *LotteryApp) SimulationManager() *module.SimulationManager {
 	return app.sm
 }
 

@@ -14,7 +14,7 @@ if [ -z "$2" ]; then
 fi
 
 # Build genesis file incl account for passed address
-coins="10000000000stake,100000000000samoleans"
+coins="10000000000loto,100000000000samoleans"
 gaiad init --chain-id $CHAINID $CHAINID
 gaiacli keys add validator --keyring-backend="test"
 gaiad add-genesis-account validator $coins --keyring-backend="test"

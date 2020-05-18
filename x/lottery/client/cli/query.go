@@ -9,23 +9,23 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/spf13/cobra"
 
-	"github.com/bandprotocol/goldcdp/x/goldcdp/types"
+	"github.com/freemanjackal/lottery-cosmoschain/x/lottery/types"
 )
 
 // GetQueryCmd returns
 func GetQueryCmd(storeKey string, cdc *codec.Codec) *cobra.Command {
-	goldcdpCmd := &cobra.Command{
+	lotteryCmd := &cobra.Command{
 		Use:                        types.ModuleName,
 		Short:                      "Querying commands for the goldcdp module",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
 	}
-	goldcdpCmd.AddCommand(flags.GetCommands(
+	lotteryCmd.AddCommand(flags.GetCommands(
 		GetCmdReadOrder(storeKey, cdc),
 	)...)
 
-	return goldcdpCmd
+	return lotteryCmd
 }
 
 // GetCmdReadOrder queries order by orderID
@@ -46,11 +46,11 @@ func GetCmdReadOrder(queryRoute string, cdc *codec.Codec) *cobra.Command {
 				return nil
 			}
 
-			var order types.Order
-			if err := cdc.UnmarshalJSON(res, &order); err != nil {
+			var lottery types.Lottery
+			if err := cdc.UnmarshalJSON(res, &lottery); err != nil {
 				return err
 			}
-			return cliCtx.PrintOutput(order)
+			return cliCtx.PrintOutput(lottery)
 		},
 	}
 }

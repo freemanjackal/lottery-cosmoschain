@@ -1,4 +1,4 @@
-package goldcdp
+package lottery
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/freemanjackal/lottery/x/lottery/client/cli"
+	"github.com/freemanjackal/lottery-cosmoschain/x/lottery/client/cli"
 )
 
 // AppModule Basics object

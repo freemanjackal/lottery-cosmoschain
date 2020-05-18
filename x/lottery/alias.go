@@ -1,8 +1,8 @@
-package goldcdp
+package lottery
 
 import (
-	"github.com/freemanjackal/lottery/x/lottery/keeper"
-	"github.com/freemanjackal/lottery/x/lottery/types"
+	"github.com/freemanjackal/lottery-cosmoschain/x/lottery/keeper"
+	"github.com/freemanjackal/lottery-cosmoschain/x/lottery/types"
 )
 
 const (
@@ -20,5 +20,7 @@ var (
 type (
 	Keeper              = keeper.Keeper
 	MsgPlayLottery          = types.MsgPlayLottery
+	MsgCreateLottery    = types.MsgCreateLottery
+	MsgCLoseLottery     = types.MsgCLoseLottery
 	MsgSetSourceChannel = types.MsgSetSourceChannel
 )

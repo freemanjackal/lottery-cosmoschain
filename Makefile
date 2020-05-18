@@ -48,9 +48,9 @@ build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
 
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=band-consumer \
-		  -X github.com/cosmos/cosmos-sdk/version.ServerName=bcd \
-		  -X github.com/cosmos/cosmos-sdk/version.ClientName=bccli \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=lottery \
+		  -X github.com/cosmos/cosmos-sdk/version.ServerName=lotd \
+		  -X github.com/cosmos/cosmos-sdk/version.ClientName=lotcli \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)"
@@ -74,11 +74,11 @@ all: install lint test
 
 build: go.sum
 ifeq ($(OS),Windows_NT)
-	go build -mod=readonly $(BUILD_FLAGS) -o build/bcd.exe ./cmd/bcd
-	go build -mod=readonly $(BUILD_FLAGS) -o build/bccli.exe ./cmd/bccli
+	go build -mod=readonly $(BUILD_FLAGS) -o build/lotd.exe ./cmd/lotd
+	go build -mod=readonly $(BUILD_FLAGS) -o build/lotcli.exe ./cmd/lotcli
 else
-	go build -mod=readonly $(BUILD_FLAGS) -o build/bcd ./cmd/bcd
-	go build -mod=readonly $(BUILD_FLAGS) -o build/bccli ./cmd/bccli
+	go build -mod=readonly $(BUILD_FLAGS) -o build/lotd ./cmd/lotd
+	go build -mod=readonly $(BUILD_FLAGS) -o build/lotcli ./cmd/lotcli
 endif
 
 build-linux: go.sum
@@ -92,8 +92,8 @@ else
 endif
 
 install: go.sum
-	go install $(BUILD_FLAGS) ./cmd/bcd
-	go install $(BUILD_FLAGS) ./cmd/bccli
+	go install $(BUILD_FLAGS) ./cmd/lotd
+	go install $(BUILD_FLAGS) ./cmd/lotcli
 
 go-mod-cache: go.sum
 	@echo "--> Download go modules to local cache"
@@ -106,7 +106,7 @@ go.sum: go.mod
 draw-deps:
 	@# requires brew install graphviz or apt-get install graphviz
 	go get github.com/RobotsAndPencils/goviz
-	@goviz -i ./cmd/bcd -d 2 | dot -Tpng -o dependency-graph.png
+	@goviz -i ./cmd/lotd -d 2 | dot -Tpng -o dependency-graph.png
 
 clean:
 	rm -rf snapcraft-local.yaml build/

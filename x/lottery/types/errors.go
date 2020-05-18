@@ -15,4 +15,5 @@ var (
 	ErrOnlyOneDenomAllowed    = sdkerrors.Register(ModuleName, 8, "OnlyOneDenomAllowed")
 	ErrInvalidDenom           = sdkerrors.Register(ModuleName, 9, "InvalidDenom")
 	ErrUnknownClientID        = sdkerrors.Register(ModuleName, 10, "UnknownClientID")
+	ErrorInvalidAmount        = sdkerrors.Register(ModuleName, 11, "InvalidAmount")
 )

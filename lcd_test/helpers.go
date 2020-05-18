@@ -49,7 +49,7 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/bandprotocol/goldcdp/app"
+	"github.com/freemanjackal/lottery-cosmoschain/app"
 )
 
 var (

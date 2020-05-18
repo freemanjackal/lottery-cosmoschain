@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/freemanjackal/lottery/x/lottery/types"
+	"github.com/freemanjackal/lottery-cosmoschain/x/lottery/types"
 )
 
 func (k Keeper) SetChannel(ctx sdk.Context, chainName string, port string, channel string) {

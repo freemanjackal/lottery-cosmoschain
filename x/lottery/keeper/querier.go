@@ -10,23 +10,23 @@ import (
 )
 
 const (
-	QueryOrder = "order"
+	QueryLottery = "Lottery"
 )
 
 // NewQuerier is the module level router for state queries.
 func NewQuerier(keeper Keeper) sdk.Querier {
 	return func(ctx sdk.Context, path []string, req abci.RequestQuery) (res []byte, err error) {
 		switch path[0] {
-		case QueryOrder:
-			return queryOrder(ctx, path[1:], req, keeper)
+		case QueryLottery:
+			return queryLottery(ctx, path[1:], req, keeper)
 		default:
 			return nil, sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unknown nameservice query endpoint")
 		}
 	}
 }
 
-// queryOrder is a query function to get order by order ID.
-func queryOrder(
+// queryLottery is a query function to get order by order ID.
+func queryLottery(
 	ctx sdk.Context, path []string, req abci.RequestQuery, keeper Keeper,
 ) ([]byte, error) {
 	if len(path) == 0 {
@@ -36,9 +36,9 @@ func queryOrder(
 	if err != nil {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, fmt.Sprintf("wrong format for requestid %s", err.Error()))
 	}
-	order, err := keeper.GetOrder(ctx, uint64(id))
+	lottery, err := keeper.GetLottery(ctx, uint64(id))
 	if err != nil {
 		return nil, err
 	}
-	return keeper.cdc.MustMarshalJSON(order), nil
+	return keeper.cdc.MustMarshalJSON(lottery), nil
 }

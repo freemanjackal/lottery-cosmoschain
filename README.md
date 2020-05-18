@@ -1,39 +1,48 @@
+# Lottery
+Lottery works as a simple lottery system where a lottery is created. Once created users can bet on any number in the open lottery.
+When lottery is closed is consulted random number from band oracles, from that is determined the winning number.  All funds are distributed to the winners. In the case there are no winners funds are accumulated and a new lottery is started.
+
+
+## No front end implementation yet.
+
 ## Instruction
 
 1. `Make install` to get `lotd` and `lotcli`
+
+    1.1. `lotd init validator --chain-id lottery` ...
+    * Configure the node, take a look at this article form more [details](https://blog.cosmos.network/guide-to-building-defi-using-band-protocol-oracle-and-cosmos-ibc-fa5348832f84)
+
 2. Run single validator by `lotd start --rpc.laddr=tcp://0.0.0.0:26657 --pruning=nothing`
 
 ## Setup relayer
 
-setup a relayer
+Information about how to setup a [relayer](https://blog.cosmos.network/guide-to-building-defi-using-band-protocol-oracle-and-cosmos-ibc-fa5348832f84)
 
-## 
+### 
 
-0. Set up channel in lottery chain by lotcli
+0. Set up channel in lottery chain by lotcli after set up the relayer
 
-```
-lotcli tx lottery set-channel bandchain lottery <channel_id_of_lottery> --from validator --keyring-backend test
 
-```
-
-0.5 Get atom from faucet
+1. Create lottery transaction
+When created the price per bets/plays is setted automatically(a fixed value)
 
 ```
-curl --location --request POST 'http://gaia-ibc-hackathon.node.bandchain.org:8000' \
---header 'Content-Type: application/javascript' \
---data-raw '{
- "address": <your_address>,
- "chain-id": "band-cosmoshub"
-}'
+lotcli tx lottery create --from [user]
+```
+2. Playing lottery
+```
+lotcli tx lottery bet [number] [price] --from [user]
+```
+3. Closing lottery
+There will be just 1 open lottery at any time. When the open lottery is closed funds are distributed and a new lottery is created
+```
+lotcli tx lottery close --from [user]
 ```
 
-1. Transfer coin from gaia to bandchain
+TODO:
+- Set lottery price by user input
+- Improve structure and model of the stored information
+- Front end
 
-```
-(bccli|gaiacli) tx transfer transfer transfer <channel_id_of_gaia> 10000000 <account_in_gold_chain> 800000000transfer/<channel_id_of_gold_chain>/uatom --from <account_in_gaia> --node http://gaia-ibc-hackathon.node.bandchain.org:26657 --keyring-backend test --chain-id band-cosmoshub
-```
 
-2. Send buy transaction
 
-```
-lotcli tx lottery create 

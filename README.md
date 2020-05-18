@@ -12,7 +12,7 @@ setup a relayer
 0. Set up channel in lottery chain by lotcli
 
 ```
-lotcli tx lottery set-channel bandchain lottery <channel_id_of_goldcdp_goldchin> --from validator --keyring-backend test
+lotcli tx lottery set-channel bandchain lottery <channel_id_of_lottery> --from validator --keyring-backend test
 
 ```
 
